@@ -1,7 +1,12 @@
 (function ($) {
   $.fn.collapsible = function(options) {
     var defaults = {
-        accordion: undefined
+      accordion: undefined,
+      duration: 350,
+      easing: 'easeOutQuart',
+      queue: false,
+      onOpen: function(){},
+      onClose: function(){}
     };
 
     options = $.extend(defaults, options);
@@ -16,11 +21,11 @@
       var collapsible_type = $this.data("collapsible");
 
       // Turn off any existing event handlers
-       $this.off('click.collapse', '.collapsible-header');
-       $panel_headers.off('click.collapse');
+      $this.off('click.collapse', '.collapsible-header');
+      $panel_headers.off('click.collapse');
 
 
-       /****************
+      /****************
        Helper Functions
        ****************/
 
@@ -28,27 +33,44 @@
       function accordionOpen(object) {
         $panel_headers = $this.find('> li > .collapsible-header');
         if (object.hasClass('active')) {
-            object.parent().addClass('active');
+          object.parent().addClass('active');
         }
         else {
-            object.parent().removeClass('active');
+          object.parent().removeClass('active');
         }
         if (object.parent().hasClass('active')){
-          object.siblings('.collapsible-body').stop(true,false).slideDown({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideDown({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.queue,
+            complete: function(){
+              $(this).css('height', '');
+              options.onOpen()
+            }
+          });
         }
         else{
-          object.siblings('.collapsible-body').stop(true,false).slideUp({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideUp({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.queue,
+            complete: function(){
+              $(this).css('height', '');
+              options.onClose()
+            }
+          });
         }
 
         $panel_headers.not(object).removeClass('active').parent().removeClass('active');
         $panel_headers.not(object).parent().children('.collapsible-body').stop(true,false).slideUp(
           {
-            duration: 350,
-            easing: "easeOutQuart",
-            queue: false,
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.queue,
             complete:
               function() {
                 $(this).css('height', '');
+                options.onClose()
               }
           });
       }
@@ -56,16 +78,32 @@
       // Expandable Open
       function expandableOpen(object) {
         if (object.hasClass('active')) {
-            object.parent().addClass('active');
+          object.parent().addClass('active');
         }
         else {
-            object.parent().removeClass('active');
+          object.parent().removeClass('active');
         }
         if (object.parent().hasClass('active')){
-          object.siblings('.collapsible-body').stop(true,false).slideDown({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideDown({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.queue,
+            complete: function(){
+              $(this).css('height', '');
+              options.onOpen()
+            }
+          });
         }
         else{
-          object.siblings('.collapsible-body').stop(true,false).slideUp({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideUp({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.queue,
+            complete: function(){
+              $(this).css('height', '');
+              options.onClose()
+            }
+          });
         }
       }
 
