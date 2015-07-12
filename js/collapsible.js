@@ -1,7 +1,11 @@
 (function ($) {
   $.fn.collapsible = function(options) {
     var defaults = {
-        accordion: undefined
+      accordion: undefined,
+      duration: 350,
+      easing: 'easeOutQuart',
+      queue: false,
+      onComplete: function(){}
     };
 
     options = $.extend(defaults, options);
@@ -34,23 +38,38 @@
             object.parent().removeClass('active');
         }
         if (object.parent().hasClass('active')){
-          object.siblings('.collapsible-body').stop(true,false).slideDown({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
-        }
-        else{
-          object.siblings('.collapsible-body').stop(true,false).slideUp({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
-        }
-
-        $panel_headers.not(object).removeClass('active').parent().removeClass('active');
-        $panel_headers.not(object).parent().children('.collapsible-body').stop(true,false).slideUp(
-          {
+          object.siblings('.collapsible-body').stop(true,false).slideDown({
             duration: 350,
             easing: "easeOutQuart",
             queue: false,
-            complete:
-              function() {
-                $(this).css('height', '');
-              }
+            complete: function(){
+              $(this).css('height', '');
+              options.onComplete()
+            }
           });
+        }
+        else{
+          object.siblings('.collapsible-body').stop(true,false).slideUp({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.easing,
+            complete: function(){
+              $(this).css('height', '');
+              options.onComplete()
+            }
+          });
+        }
+
+        $panel_headers.not(object).removeClass('active').parent().removeClass('active');
+        $panel_headers.not(object).parent().children('.collapsible-body').stop(true,false).slideUp({
+          duration: options.duration,
+          easing: options.easing,
+          queue: options.easing,
+          complete: function(){
+              $(this).css('height', '');
+              options.onComplete()
+            }
+        });
       }
 
       // Expandable Open
@@ -62,10 +81,26 @@
             object.parent().removeClass('active');
         }
         if (object.parent().hasClass('active')){
-          object.siblings('.collapsible-body').stop(true,false).slideDown({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideDown({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.easing,
+            complete: function(){
+              $(this).css('height', '');
+              options.onComplete()
+            }
+          });
         }
         else{
-          object.siblings('.collapsible-body').stop(true,false).slideUp({ duration: 350, easing: "easeOutQuart", queue: false, complete: function() {$(this).css('height', '');}});
+          object.siblings('.collapsible-body').stop(true,false).slideUp({
+            duration: options.duration,
+            easing: options.easing,
+            queue: options.easing,
+            complete: function(){
+              $(this).css('height', '');
+              options.onComplete()
+            }
+          });
         }
       }
 
